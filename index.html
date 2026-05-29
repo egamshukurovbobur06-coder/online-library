@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Online Kutubxona</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Auth bo'limi -->
+    <div id="authSection">
+        <div class="auth-box">
+            <h1>📚 Online Kutubxona</h1>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('login')">Kirish</button>
+                <button class="tab-btn" onclick="showTab('register')">Ro'yxatdan o'tish</button>
+            </div>
+
+            <!-- Login formasi -->
+            <div id="loginForm">
+                <div class="login-methods">
+                    <button class="method-btn" onclick="showLoginMethod('email')">Email bilan kirish</button>
+                    <button class="method-btn" onclick="showLoginMethod('name')">Ism bilan kirish</button>
+                </div>
+
+                <!-- Email/parol bilan kirish -->
+                <div id="emailLogin">
+                    <input type="email" id="loginEmail" placeholder="Email" class="input">
+                    <input type="password" id="loginPassword" placeholder="Parol" class="input">
+                    <button onclick="loginWithEmail()" class="btn-primary">Kirish</button>
+                </div>
+
+                <!-- Ism bilan kirish -->
+                <div id="nameLogin" style="display: none;">
+                    <input type="text" id="loginName" placeholder="Ismingizni kiriting" class="input">
+                    <button onclick="loginWithName()" class="btn-primary">Kirish</button>
+                </div>
+            </div>
+
+            <!-- Register formasi -->
+            <div id="registerForm" style="display: none;">
+                <input type="text" id="regName" placeholder="Ismingiz" class="input">
+                <input type="email" id="regEmail" placeholder="Email" class="input">
+                <input type="password" id="regPassword" placeholder="Parol" class="input">
+                <input type="password" id="regPasswordConfirm" placeholder="Parolni takrorlang" class="input">
+                <button onclick="register()" class="btn-primary">Ro'yxatdan o'tish</button>
+            </div>
+
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <!-- Asosiy oyna (kirgandan keyin) -->
+    <div id="mainSection" style="display: none;">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header">
+                <button onclick="logout()" class="btn-logout">🚪 Chiqish</button>
+                <h1><span id="headerIcon">📚</span> <span id="headerLibraryName">Kutubxona</span></h1>
+                <button onclick="showThemeModal()" class="btn-theme">🎨 Mavzu</button>
+            </div>
+
+            <!-- Xona dizayni -->
+            <div class="room-container">
+                <!-- Chap devor - deraza -->
+                <div class="left-wall">
+                    <div class="window-frame">
+                        <div class="window-glass">
+                            <div class="window-shine"></div>
+                        </div>
+                        <div class="window-cross-h"></div>
+                        <div class="window-cross-v"></div>
+                        <div class="window-sill"></div>
+                    </div>
+                </div>
+
+                <!-- O'ng devor - kitob javonlari -->
+                <div class="right-wall">
+                    <div class="shelf-header">
+                        <h3>Kitob javonlari</h3>
+                        <button onclick="addShelf()" class="btn-add-shelf" id="addShelfBtn">+ Javon qo'shish</button>
+                    </div>
+                    <div id="shelvesContainer">
+                        <!-- Javonlar dinamik qo'shiladi -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
