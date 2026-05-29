@@ -157,6 +157,6 @@ app.get('/api/user/profile', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server http://localhost:${PORT} da ishlamoqda`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server ${PORT}-portda ishlamoqda`);
 });

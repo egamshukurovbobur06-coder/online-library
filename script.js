@@ -39,62 +39,7 @@ function showLoginMethod(method) {
     hideMessage();
 }
 
-// Email bilan kirish
-async function loginWithEmail() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    
-    if (!email || !password) {
-        showMessage('Iltimos, email va parolni kiriting', 'error');
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${API_URL}/login/email`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            loginSuccess(data.user);
-        } else {
-            showMessage(data.error, 'error');
-        }
-    } catch (error) {
-        showMessage('Serverga ulanishda xatolik', 'error');
-    }
-}
 
-// Ism bilan kirish
-async function loginWithName() {
-    const firstName = document.getElementById('loginName').value;
-    
-    if (!firstName) {
-        showMessage('Iltimos, ismingizni kiriting', 'error');
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${API_URL}/login/name`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ firstName })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            loginSuccess(data.user);
-        } else {
-            showMessage(data.error, 'error');
-        }
-    } catch (error) {
-        showMessage('Serverga ulanishda xatolik', 'error');
-    }
-}
 
 // Ro'yxatdan o'tish
 async function register() {
