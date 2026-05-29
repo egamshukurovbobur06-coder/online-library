@@ -5,5 +5,12 @@
     "email": "egamshukurovbobur06@gmail.com",
     "password": "$2b$10$83OYYFKCy0yS5jWiYLTvwOODp2oizzWoYb1koC4RF8TDGKJl8BwLa",
     "createdAt": "2026-05-29T04:03:46.924Z"
+  },
+  {
+    "id": "1780067612008",
+    "firstName": "Artyom",
+    "email": "artyomknight06@gmail.com",
+    "password": "$2b$10$HbQ5FW./Vlze1HYnpCbBIOotMsfiOJdtpl0bd3xC/BnZhEP37jBzy",
+    "createdAt": "2026-05-29T15:13:32.273Z"
   }
 ]
