@@ -1,0 +1,141 @@
+{
+    "name": "OnLibrary — Raqamli kutubxona",
+    "short_name": "OnLibrary",
+    "description": "Shaxsiy raqamli kitob javoningiz. Kitoblaringizni saqlang, ulashing va boshqaring.",
+    "id": "/",
+    "start_url": "./index.html?source=pwa",
+    "scope": "./",
+    "display": "standalone",
+    "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+    "orientation": "any",
+    "background_color": "#f5f0eb",
+    "theme_color": "#3d6b3d",
+    "lang": "uz",
+    "dir": "ltr",
+    "categories": ["books", "education", "productivity", "lifestyle"],
+    "prefer_related_applications": false,
+    "iarc_rating_id": "",
+    "icons": [
+        {
+            "src": "favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "OnLibrary kutubxona ko'rinishi"
+        },
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "OnLibrary desktop ko'rinishi"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Kutubxonam",
+            "short_name": "Kutubxona",
+            "description": "Shaxsiy kutubxonangizni ochish",
+            "url": "./index.html?panel=library",
+            "icons": [
+                {
+                    "src": "icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Kitob qo'shish",
+            "short_name": "Qo'shish",
+            "description": "Yangi kitob qo'shish",
+            "url": "./index.html?action=add-book",
+            "icons": [
+                {
+                    "src": "icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Foydalanuvchilar",
+            "short_name": "Foydalanuvchilar",
+            "description": "Boshqa foydalanuvchilarni ko'rish",
+            "url": "./index.html?panel=users",
+            "icons": [
+                {
+                    "src": "icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ],
+    "share_target": {
+        "action": "./index.html?action=share-target",
+        "method": "GET",
+        "enctype": "application/x-www-form-urlencoded",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    },
+    "protocol_handlers": [
+        {
+            "protocol": "web+onlibrary",
+            "url": "./index.html?url=%s"
+        }
+    ],
+    "launch_handler": {
+        "client_mode": "auto"
+    },
+    "edge_side_panel": {
+        "preferred_width": 480
+    }
+}

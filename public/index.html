@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="OnLibrary - Raqamli kitob javoningiz" />
+    <meta name="theme-color" content="#3d6b3d" />
+    <title>OnLibrary</title>
+
+    <!-- ✅ FAVICONS (tuzatildi) -->
+    <link rel="icon" type="image/svg+xml" href="icon.svg" />
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+
+    <!-- ✅ PWA -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="OnLibrary" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- ✅ EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <!-- ✅ Cropper.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
+
+    <!-- ✅ html-to-image -->
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+
+    <!-- ✅ pdf.js -->
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+
+    <!-- ✅ Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+<!-- ================================================
+     AUTH SECTION
+     ================================================ -->
+<div id="authSection">
+    <div class="auth-container">
+        <div class="auth-card">
+
+            <div class="auth-logo">
+                <svg width="64" height="64" viewBox="0 0 100 100" fill="none">
+                    <rect x="2" y="2" width="96" height="96" rx="14" fill="white" stroke="#e0d5c0" stroke-width="2"/>
+                    <rect x="14" y="28" width="16" height="52" rx="2" fill="#5d3a1a" stroke="#3d2b1f" stroke-width="1.5"/>
+                    <rect x="34" y="22" width="32" height="58" rx="2" fill="#7a4e2d" stroke="#3d2b1f" stroke-width="2"/>
+                    <rect x="70" y="28" width="16" height="52" rx="2" fill="#5d3a1a" stroke="#3d2b1f" stroke-width="1.5"/>
+                </svg>
+            </div>
+
+            <h1>OnLibrary</h1>
+            <p class="auth-desc">Kitoblar dunyosiga xush kelibsiz</p>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Kirish</button>
+                <button class="auth-tab" data-tab="register">Ro'yxatdan o'tish</button>
+            </div>
+
+            <div id="authMessage" class="auth-message"></div>
+
+            <button id="googleSignInBtn" class="google-btn">
+                <svg width="18" height="18" viewBox="0 0 48 48">
+                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                </svg>
+                Google bilan davom etish
+            </button>
+
+            <div class="auth-divider"><span>yoki</span></div>
+
+            <!-- LOGIN -->
+            <div id="loginPanel" class="auth-panel active">
+                <input type="email" id="loginEmail" class="auth-input" placeholder="Email" autocomplete="email" />
+                <input type="password" id="loginPassword" class="auth-input" placeholder="Parol" autocomplete="current-password" />
+                <button id="loginBtn" class="auth-btn">Kirish</button>
+                <button id="forgotPasswordBtn" class="auth-link-btn" type="button">Parolni unutdingizmi?</button>
+            </div>
+
+            <!-- REGISTER -->
+            <div id="registerPanel" class="auth-panel">
+                <input type="text" id="regName" class="auth-input" placeholder="Ismingiz" autocomplete="name" />
+                <input type="email" id="regEmail" class="auth-input" placeholder="Email" autocomplete="email" />
+                <input type="password" id="regPassword" class="auth-input" placeholder="Parol (kamida 6 ta belgi)" autocomplete="new-password" />
+                <input type="password" id="regPasswordConfirm" class="auth-input" placeholder="Parolni takrorlang" autocomplete="new-password" />
+                <button id="registerBtn" class="auth-btn">Ro'yxatdan o'tish</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================================================
+     EMAIL VERIFICATION
+     ================================================ -->
+<div id="verifySection" style="display:none;">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+            </div>
+            <h1>Tasdiqlash kodi</h1>
+            <p class="auth-desc">
+                <strong id="verifyEmailText"></strong> manziliga
+                6 xonali kod yuborildi.
+            </p>
+            <p class="auth-hint">Spam papkani ham tekshiring · Kod 10 daqiqa amal qiladi</p>
+
+            <input type="text" id="verifyCodeInput" class="auth-input auth-input-code"
+                   placeholder="000000" maxlength="6" inputmode="numeric" />
+
+            <button id="checkVerifyBtn" class="auth-btn">Tasdiqlash</button>
+            <button id="resendVerifyBtn" class="auth-link-btn" type="button">Kodni qayta yuborish</button>
+            <button id="cancelVerifyBtn" class="auth-link-btn auth-link-danger" type="button">Bekor qilish</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================
+     PAROLNI TIKLASH
+     ================================================ -->
+<div id="resetSection" style="display:none;">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#3d6b3d" stroke-width="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </div>
+
+            <div id="resetStep1">
+                <h1>Parolni tiklash</h1>
+                <p class="auth-desc">Email manzilingizni kiriting — kod yuboramiz</p>
+                <input type="email" id="resetEmail" class="auth-input" placeholder="Email manzilingiz" />
+                <button id="sendResetCodeBtn" class="auth-btn">Kod yuborish</button>
+                <button id="cancelResetBtn" class="auth-link-btn" type="button">Bekor qilish</button>
+            </div>
+
+            <div id="resetStep2" style="display:none;">
+                <h1>Yangi parol</h1>
+                <p class="auth-desc">
+                    <strong id="resetEmailText"></strong> ga yuborilgan kodni kiriting
+                </p>
+                <input type="text" id="resetCodeInput" class="auth-input auth-input-code"
+                       placeholder="000000" maxlength="6" inputmode="numeric" />
+                <input type="password" id="newPassword" class="auth-input"
+                       placeholder="Yangi parol (kamida 6 ta belgi)" autocomplete="new-password" />
+                <input type="password" id="newPasswordConfirm" class="auth-input"
+                       placeholder="Yangi parolni takrorlang" autocomplete="new-password" />
+                <button id="confirmResetBtn" class="auth-btn">Parolni yangilash</button>
+                <button id="backResetBtn" class="auth-link-btn" type="button">Orqaga</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================
+     MAIN APP
+     ================================================ -->
+<div id="mainApp" style="display:none;">
+
+    <!-- ==========================================
+         SIDEBAR
+         ========================================== -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none">
+                    <rect x="4" y="4" width="92" height="92" rx="12" fill="white" stroke="#e0d5c0" stroke-width="2"/>
+                    <rect x="16" y="30" width="14" height="48" rx="2" fill="#5d3a1a" stroke="#3d2b1f" stroke-width="1.5"/>
+                    <rect x="34" y="24" width="32" height="54" rx="2" fill="#7a4e2d" stroke="#3d2b1f" stroke-width="2"/>
+                    <rect x="70" y="30" width="14" height="48" rx="2" fill="#5d3a1a" stroke="#3d2b1f" stroke-width="1.5"/>
+                </svg>
+                <span>OnLibrary</span>
+            </div>
+
+            <div class="sidebar-avatar-wrap">
+                <div class="sidebar-avatar" id="sidebarAvatar"></div>
+                <div class="sidebar-user-info">
+                    <div class="name" id="sidebarName"></div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <button class="sidebar-link active" data-panel="library">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+                <span>Mening javonim</span>
+            </button>
+
+            <button class="sidebar-link" data-panel="books">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    <line x1="9" y1="7" x2="16" y2="7"/>
+                    <line x1="9" y1="11" x2="16" y2="11"/>
+                </svg>
+                <span>Kitoblar</span>
+            </button>
+
+            <button class="sidebar-link" data-panel="profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Profil</span>
+            </button>
+
+            <button class="sidebar-link" data-panel="stats">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="20" x2="12" y2="10"/>
+                    <line x1="18" y1="20" x2="18" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="16"/>
+                </svg>
+                <span>Statistika</span>
+            </button>
+
+            <button class="sidebar-link" data-panel="users">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Foydalanuvchilar</span>
+            </button>
+
+            <button class="sidebar-link" data-panel="chats">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+                <span>Chatlar</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ==========================================
+         MAIN WRAPPER
+         ========================================== -->
+    <div class="main-wrapper">
+
+        <!-- HEADER -->
+        <header class="app-header">
+            <button id="menuToggle" class="menu-toggle" aria-label="Menyu">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+
+            <div class="header-search" id="headerSearch">
+                <input type="text" id="searchInput" placeholder="Kitob nomi yoki yozuvchi bo'yicha qidirish..." />
+                <span class="search-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </span>
+            </div>
+
+            <div class="header-actions">
+                <button id="addBookToShelfBtn" class="add-book-btn-small">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    <span>Kitob qo'shish</span>
+                </button>
+
+                <div class="notification-wrapper">
+                    <button id="notificationBtn" class="notification-btn" aria-label="Bildirishnomalar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </button>
+                    <span id="notificationBadge" class="notification-badge" style="display:none;">0</span>
+                    <div id="notificationDropdown" class="notification-dropdown" style="display:none;">
+                        <div class="notification-header">
+                            <h4>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                                </svg>
+                                Bildirishnomalar
+                            </h4>
+                            <button id="clearNotifications" class="clear-notif-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                                Tozalash
+                            </button>
+                        </div>
+                        <div id="notificationList" class="notification-list"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="app-main">
+
+            <!-- ======================================
+                 LIBRARY PANEL (Mening javonim) — 4 QATOR
+                 ====================================== -->
+            <div id="libraryPanel" class="panel active">
+                <div class="library-scene">
+                    <div class="books-counter"><span id="booksCount">0</span></div>
+
+                    <div class="carousel-wrapper">
+                        <button class="carousel-arrow prev" onclick="scrollCarousel(-1)" aria-label="Oldingi javon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                <polyline points="15 18 9 12 15 6"/>
+                            </svg>
+                        </button>
+                        <button class="carousel-arrow next" onclick="scrollCarousel(1)" aria-label="Keyingi javon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </button>
+
+                        <div class="shelves-container" id="shelvesCarousel">
+
+                            <!-- JAVON 1 — 4 qator -->
+                            <div class="bookshelf-unit" data-shelf="1">
+                                <div class="wooden-bookshelf" id="shelfCapture1">
+                                    <div class="shelf-rows">
+                                        <div class="shelf-row"><div class="shelf-row-books" data-shelf="1" data-row="1"></div></div>
+                                        <div class="shelf-divider"></div>
+                                        <div class="shelf-row"><div class="shelf-row-books" data-shelf="1" data-row="2"></div></div>
+                                        <div class="shelf-divider"></div>
+                                        <div class="shelf-row"><div class="shelf-row-books" data-shelf="1" data-row="3"></div></div>
+                                    </div>
+                                    <div class="cabinet">
+                                        <div class="cabinet-door left"><div class="cabinet-handle"></div></div>
+                                        <div class="cabinet-door right"><div class="cabinet-handle"></div></div>
+                                    </div>
+                                    <div class="shelf-legs"><div class="leg left"></div><div class="leg right"></div></div>
+                                </div>
+                            </div>
+
+                            <!-- JAVON 2 — 4 qator -->
+                            <div class="bookshelf-unit" data-shelf="2">
+                                <div class="wooden-bookshelf" id="shelfCapture2">
+                                    <div class="shelf-rows">
+                                        <div class="shelf-row"><div class="shelf-row-books" data-shelf="2" data-row="1"></div></div>
+                                        <div class="shelf-divider"></div>
+                                        <div class="shelf-row"><div class="shelf-row-books" data-shelf="2" data-row="2"></div></div>
+                                        <div class="shelf-divider"></div>
+                                        <div class="shelf-row"><div class="shelf-row-books" data-shelf="2" data-row="3"></div></div>
+                                    </div>
+                                    <div class="cabinet">
+                                        <div class="cabinet-door left"><div class="cabinet-handle"></div></div>
+                                        <div class="cabinet-door right"><div class="cabinet-handle"></div></div>
+                                    </div>
+                                    <div class="shelf-legs"><div class="leg left"></div><div class="leg right"></div></div>
+                                </div>
+                            </div>
+
+                            <!-- JAVON 3 — 4 qator -->
+                            <div class="bookshelf-unit" data-shelf="3">
+                                <div class="wooden-bookshelf" id="shelfCapture3">
+                                    <div class="shelf-rows">
+                                        <div class="shelf-row"><div class="shelf-row-books" data-shelf="3" data-row="1"></div></div>
+                                        <div class="shelf-divider"></div>
+                                        <div class="shelf-row"><div class="shelf-row-books" data-shelf="3" data-row="2"></div></div>
+                                        <div class="shelf-divider"></div>
+                                        <div class="shelf-row"><div class="shelf-row-books" data-shelf="3" data-row="3"></div></div>
+                                    </div>
+                                    <div class="cabinet">
+                                        <div class="cabinet-door left"><div class="cabinet-handle"></div></div>
+                                        <div class="cabinet-door right"><div class="cabinet-handle"></div></div>
+                                    </div>
+                                    <div class="shelf-legs"><div class="leg left"></div><div class="leg right"></div></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="carousel-dots">
+                            <button class="carousel-dot active" data-label="1" onclick="goToShelf(0)" aria-label="1-javon"></button>
+                            <button class="carousel-dot" data-label="2" onclick="goToShelf(1)" aria-label="2-javon"></button>
+                            <button class="carousel-dot" data-label="3" onclick="goToShelf(2)" aria-label="3-javon"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================
+                 KITOBLAR PANEL (Admin tomonidan yuklanadi)
+                 ====================================== -->
+            <div id="booksPanel" class="panel">
+                <div class="books-panel-inner">
+
+                    <div class="books-header">
+                        <div>
+                            <h3 class="panel-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                    <line x1="9" y1="7" x2="16" y2="7"/>
+                                    <line x1="9" y1="11" x2="16" y2="11"/>
+                                </svg>
+                                Umumiy kitoblar
+                            </h3>
+                            <p class="panel-hint">O'zingizga yoqqan kitobni javoningizga oling</p>
+                        </div>
+
+                        <!-- ✅ Faqat admin ko'radi -->
+                        <button type="button" class="books-admin-upload-btn" id="adminUploadBtn" style="display:none;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Kitob yuklash
+                        </button>
+                        <input type="file" id="adminUploadInput" multiple accept=".pdf,.epub,.mp3,.m4a,.wav,.ogg,.aac,application/pdf,audio/*" style="display:none;" />
+                    </div>
+
+                    <!-- Filtrlar -->
+                    <div class="books-filters" id="booksFilters">
+                        <button class="books-filter-tab active" data-filter="all">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                <rect x="14" y="14" width="7" height="7" rx="1"/>
+                            </svg>
+                            Barchasi
+                        </button>
+                        <button class="books-filter-tab" data-filter="pdf">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            PDF
+                        </button>
+                        <button class="books-filter-tab" data-filter="audio">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18V5l12-2v13"/>
+                                <circle cx="6" cy="18" r="3"/>
+                                <circle cx="18" cy="16" r="3"/>
+                            </svg>
+                            Audio
+                        </button>
+                        <button class="books-filter-tab" data-filter="link">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                            </svg>
+                            Havola
+                        </button>
+                    </div>
+
+                    <!-- Kitoblar grid -->
+                    <div class="books-grid" id="booksGrid"></div>
+                </div>
+            </div>
+
+            <!-- ================================================
+     ADMIN KITOB TAHRIRLASH MODAL
+     ================================================ -->
+<div id="adminEditBookModal" class="modal-custom">
+    <div class="modal-content" style="max-width: 540px;">
+        <button class="modal-close" id="adminEditCloseBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <div class="modal-body">
+            <h3>Kitobni tahrirlash</h3>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div>
+                    <label class="modal-label">Kitob nomi *</label>
+                    <input type="text" id="adminEditTitle" class="modal-input" placeholder="Kitob nomi">
+                </div>
+                <div>
+                    <label class="modal-label">Muallif</label>
+                    <input type="text" id="adminEditAuthor" class="modal-input" placeholder="Muallif ismi">
+                </div>
+            </div>
+
+            <label class="modal-label">Qisqa tavsif</label>
+            <textarea id="adminEditDesc" class="modal-input" rows="2" placeholder="Kitob haqida..."></textarea>
+
+            <label class="modal-label">Muqova rasmi</label>
+            <div class="admin-cover-upload">
+                <input type="file" id="adminEditCover" accept="image/*" style="display:none;">
+                <button type="button" id="adminEditCoverBtn" class="admin-cover-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    Rasmni almashtirish
+                </button>
+                <div id="adminEditCoverPreview" class="admin-cover-preview"></div>
+            </div>
+            <button type="button" id="adminEditCoverRemove" class="admin-cover-remove-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                Muqovani olib tashlash
+            </button>
+
+            <div class="modal-actions" style="margin-top:18px;">
+                <button type="button" class="modal-btn" id="adminEditCancelBtn">Bekor qilish</button>
+                <button type="button" class="modal-btn edit" id="adminEditSaveBtn">Saqlash</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ================================================
+     ADMIN KITOB YUKLASH MODAL
+     ================================================ -->
+<div id="adminUploadModal" class="modal-custom">
+    <div class="modal-content" style="max-width: 620px;">
+        <button class="modal-close" id="adminUploadCloseBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <div class="modal-body">
+            <h3>Yangi kitob yuklash</h3>
+            <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:14px;">
+                * belgisi majburiy maydon
+            </p>
+
+            <!-- Asosiy ma'lumotlar -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div>
+                    <label class="modal-label">Kitob nomi *</label>
+                    <input type="text" id="adminBookTitle" class="modal-input" placeholder="Kitob nomi">
+                </div>
+                <div>
+                    <label class="modal-label">Muallif</label>
+                    <input type="text" id="adminBookAuthor" class="modal-input" placeholder="Muallif ismi">
+                </div>
+            </div>
+
+            <label class="modal-label">Qisqa tavsif</label>
+            <textarea id="adminBookDesc" class="modal-input" rows="2" placeholder="Kitob haqida..."></textarea>
+
+            <!-- Muqova rasm -->
+            <label class="modal-label">Muqova rasmi</label>
+            <div class="admin-cover-upload">
+                <input type="file" id="adminBookCover" accept="image/*" style="display:none;">
+                <button type="button" id="adminBookCoverBtn" class="admin-cover-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    Rasm tanlash
+                </button>
+                <div id="adminBookCoverPreview" class="admin-cover-preview"></div>
+            </div>
+
+            <!-- Format tanlash -->
+            <label class="modal-label" style="margin-top:14px;">Kitob formati</label>
+            <div class="book-type-tabs" id="adminBookTypeTabs">
+                <button type="button" class="book-type-tab active" data-type="simple">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    Oddiy
+                </button>
+                <button type="button" class="book-type-tab" data-type="pdf">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    PDF
+                </button>
+                <button type="button" class="book-type-tab" data-type="audio">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18V5l12-2v13"/>
+                        <circle cx="6" cy="18" r="3"/>
+                        <circle cx="18" cy="16" r="3"/>
+                    </svg>
+                    Audio
+                </button>
+                <button type="button" class="book-type-tab" data-type="link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                    Havola
+                </button>
+            </div>
+
+            <!-- PDF -->
+            <div id="adminPdfSection" class="file-section" style="display:none;">
+                <label class="modal-label">PDF fayl *</label>
+                <input type="file" id="adminPdfFile" class="modal-input" accept="application/pdf,.pdf" style="padding:8px;">
+                <p style="font-size:0.68rem;color:var(--text-muted);margin:4px 0 8px;">
+                    Maksimal hajm: 5 MB
+                </p>
+                <div id="adminPdfPreview" class="admin-file-preview"></div>
+            </div>
+
+            <!-- Audio -->
+            <div id="adminAudioSection" class="file-section" style="display:none;">
+                <label class="modal-label">Audio fayl *</label>
+                <input type="file" id="adminAudioFile" class="modal-input" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac" style="padding:8px;">
+                <p style="font-size:0.68rem;color:var(--text-muted);margin:4px 0 8px;">
+                    Maksimal hajm: 5 MB
+                </p>
+                <div id="adminAudioPreview" class="admin-file-preview"></div>
+            </div>
+
+            <!-- Havola -->
+            <div id="adminLinkSection" class="file-section" style="display:none;">
+                <label class="modal-label">Kitob havolasi (URL) *</label>
+                <input type="url" id="adminLinkUrl" class="modal-input" placeholder="https://...">
+                <label class="modal-label">Manba</label>
+                <div class="link-source-tabs" id="adminLinkSourceTabs">
+                    <button type="button" class="link-source-tab active" data-source="mutolaa">Mutolaa</button>
+                    <button type="button" class="link-source-tab" data-source="google">Google Books</button>
+                    <button type="button" class="link-source-tab" data-source="other">Boshqa</button>
+                </div>
+            </div>
+
+            <!-- Amallar -->
+            <div class="modal-actions" style="margin-top:18px;">
+                <button type="button" class="modal-btn" id="adminUploadCancelBtn">Bekor qilish</button>
+                <button type="button" class="modal-btn edit" id="adminUploadSaveBtn">Yuklash</button>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- ======================================
+                 PROFILE PANEL
+                 ====================================== -->
+            <div id="profilePanel" class="panel">
+                <div class="profile-card">
+
+                    <div class="profile-top">
+                        <div class="profile-avatar-section">
+                            <div class="profile-avatar" id="profileAvatar"></div>
+                            <button id="changeAvatarBtn" class="change-avatar-btn" title="Rasm o'zgartirish">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                    <circle cx="12" cy="13" r="4"/>
+                                </svg>
+                            </button>
+                            <input type="file" id="profileAvatarInput" accept="image/*" style="display:none;" />
+                        </div>
+
+                        <div class="profile-info">
+                            <div class="name" id="profileName"></div>
+                            <span class="badge">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                                Kitobxon
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="profile-form">
+                        <div class="profile-form-row">
+                            <div class="profile-field">
+                                <label>Yosh</label>
+                                <input type="number" id="profileAge" class="profile-input" placeholder="Yoshingiz" min="1" max="120" />
+                            </div>
+                            <div class="profile-field">
+                                <label>Mutaxassislik</label>
+                                <input type="text" id="profileProfession" class="profile-input" placeholder="Kasbingiz" />
+                            </div>
+                        </div>
+                        <div class="profile-field full">
+                            <label>Iqtibos</label>
+                            <textarea id="profileQuote" class="profile-input profile-textarea" placeholder="Sevimli iqtibosingiz..." rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats-row">
+                        <div class="profile-stat-item">
+                            <span class="number" id="profileBooks">0</span>
+                            <span class="label">Jami</span>
+                        </div>
+                        <div class="profile-stat-item">
+                            <span class="number" id="profileRead">0</span>
+                            <span class="label">O'qilgan</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions">
+                        <button id="shareProfileBtn" class="profile-share-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                            Ulashish
+                        </button>
+                        <button id="editProfileBtn" class="edit-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                            Tahrirlash
+                        </button>
+                        <button id="logoutProfileBtn" class="logout-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Chiqish
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ======================================
+                 STATS PANEL
+                 ====================================== -->
+            <div id="statsPanel" class="panel">
+                <div class="stats-container">
+                    <h3 class="panel-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="20" x2="12" y2="10"/>
+                            <line x1="18" y1="20" x2="18" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="16"/>
+                        </svg>
+                        Kutubxona statistikasi
+                    </h3>
+                    <p class="stats-subtitle">Kitoblaringizning umumiy holati</p>
+
+                    <div class="stats-donut-wrapper">
+                        <svg viewBox="0 0 200 200" class="stats-donut">
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#3d6b3d" stroke-width="20"
+                                stroke-dasharray="0 502" stroke-dashoffset="0" stroke-linecap="round"
+                                id="statsReadCircle" />
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#f39c12" stroke-width="20"
+                                stroke-dasharray="0 502" stroke-dashoffset="0" stroke-linecap="round"
+                                id="statsReadingCircle" />
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#e74c3c" stroke-width="20"
+                                stroke-dasharray="0 502" stroke-dashoffset="0" stroke-linecap="round"
+                                id="statsUnreadCircle" />
+                            <text x="100" y="82" text-anchor="middle" dominant-baseline="central"
+                                font-size="36" font-weight="700" fill="#2c3e2c"
+                                font-family="'Playfair Display', serif" id="statsTotalText">0</text>
+                            <text x="100" y="118" text-anchor="middle" dominant-baseline="central"
+                                font-size="13" fill="#7a8a7a" font-weight="500"
+                                font-family="'Inter', sans-serif">Jami kitob</text>
+                        </svg>
+                    </div>
+
+                    <div class="stats-legend">
+                        <div class="stats-legend-item">
+                            <span class="stats-legend-color" style="background:#22c55e;"></span>
+                            <span class="stats-legend-label">O'qilgan</span>
+                            <span class="stats-legend-value" id="statsReadCount">0</span>
+                            <span class="stats-legend-percent" id="statsReadPercent">0%</span>
+                        </div>
+                        <div class="stats-legend-item">
+                            <span class="stats-legend-color" style="background:#f39c12;"></span>
+                            <span class="stats-legend-label">O'qilayotgan</span>
+                            <span class="stats-legend-value" id="statsReadingCount">0</span>
+                            <span class="stats-legend-percent" id="statsReadingPercent">0%</span>
+                        </div>
+                        <div class="stats-legend-item">
+                            <span class="stats-legend-color" style="background:#e74c3c;"></span>
+                            <span class="stats-legend-label">O'qilmagan</span>
+                            <span class="stats-legend-value" id="statsUnreadCount">0</span>
+                            <span class="stats-legend-percent" id="statsUnreadPercent">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================
+                 USERS PANEL — Faqat foydalanuvchilar (kitoblar tab olib tashlangan)
+                 ====================================== -->
+            <div id="usersPanel" class="panel">
+                <div class="users-header">
+                    <h3 class="panel-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Foydalanuvchilar
+                    </h3>
+                </div>
+
+                <div class="users-search">
+                    <div class="users-search-input-wrap">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="users-search-icon">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" id="usersSearchInput" class="users-search-input"
+                               placeholder="Foydalanuvchi nomi bo'yicha qidirish..." />
+                        <button id="usersSearchClear" class="users-search-clear" style="display:none;" title="Tozalash">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <p class="panel-hint" id="usersPanelHint">Foydalanuvchi profilini ko'rish uchun kartochkani bosing</p>
+
+                <div id="globalUsersList" class="global-stats-list"></div>
+            </div>
+
+            <!-- ======================================
+                 CHATS PANEL
+                 ====================================== -->
+            <div id="chatsPanel" class="panel">
+                <h3 class="panel-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                    </svg>
+                    Chatlar
+                </h3>
+                <div id="chatsList" class="chat-list"></div>
+            </div>
+
+            <!-- ======================================
+                 USER PROFILE PANEL
+                 ====================================== -->
+            <div id="userProfilePanel" class="panel">
+                <div class="user-profile-container">
+
+                    <button id="backToUsersBtn" class="back-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                        Foydalanuvchilarga qaytish
+                    </button>
+
+                    <div class="user-profile-card">
+
+                        <div class="user-profile-header">
+                            <div class="user-profile-avatar" id="userProfileAvatar"></div>
+                            <div class="user-profile-info">
+                                <h2 id="userProfileName">Username</h2>
+                                <span class="user-profile-badge">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                    </svg>
+                                    Kitobxon
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="user-profile-details">
+                            <div class="user-detail-row">
+                                <svg class="user-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span class="user-detail-label">Yosh</span>
+                                <span class="user-detail-value" id="userProfileAge">—</span>
+                            </div>
+                            <div class="user-detail-row">
+                                <svg class="user-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                </svg>
+                                <span class="user-detail-label">Mutaxassislik</span>
+                                <span class="user-detail-value" id="userProfileProfession">—</span>
+                            </div>
+                            <div class="user-detail-row">
+                                <svg class="user-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                                </svg>
+                                <span class="user-detail-label">Iqtibos</span>
+                                <span class="user-detail-value" id="userProfileQuote">—</span>
+                            </div>
+                        </div>
+
+                        <div class="user-profile-stats">
+                            <div class="user-stat-item">
+                                <span class="user-stat-number" id="userProfileBooks">0</span>
+                                <span class="user-stat-label">Jami kitob</span>
+                            </div>
+                            <div class="user-stat-item">
+                                <span class="user-stat-number" id="userProfileRead">0</span>
+                                <span class="user-stat-label">O'qilgan</span>
+                            </div>
+                        </div>
+
+                        <div id="userReadingSection" class="user-reading-section" style="display:none;">
+                            <div class="user-reading-header">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                </svg>
+                                <span>Hozir o'qiyotgan kitoblari</span>
+                            </div>
+                            <div id="userReadingBooks" class="user-reading-books"></div>
+                        </div>
+
+                        <div class="user-profile-actions">
+                            <button id="viewUserLibraryBtn" class="user-action-btn primary">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                                Kutubxonasini ko'rish
+                            </button>
+                            <button id="chatWithUserBtn" class="user-action-btn secondary">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                                </svg>
+                                Chat yozish
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================================
+                 OTHER LIBRARY PANEL
+                 ====================================== -->
+            <div id="otherLibraryPanel" class="panel">
+                <div class="other-library-header">
+                    <button id="backToUserProfileBtn" class="back-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                        Profilga qaytish
+                    </button>
+                    <h3 id="otherLibraryTitle"></h3>
+                    <button id="goToProfileBtn" class="back-btn back-btn-right">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Profil
+                    </button>
+                </div>
+                <div id="otherShelvesContainer"></div>
+            </div>
+
+            <!-- ======================================
+                 CHAT ROOM PANEL
+                 ====================================== -->
+            <div id="chatPanel" class="panel">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <button id="closeChatBtn" class="back-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"/>
+                            </svg>
+                            Orqaga
+                        </button>
+                        <h3 id="chatTitle">Chat</h3>
+                    </div>
+                    <div id="chatMessages" class="chat-messages"></div>
+                    <div class="chat-input-row">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Xabar yozing..." />
+                        <button id="sendChatBtn" class="chat-send-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ==========================================
+         BOTTOM NAV — 7 ta element
+         ========================================== -->
+    <nav id="bottomNav" class="bottom-nav">
+    <!-- CHAP: 3 ta -->
+    <button class="nav-item active" data-panel="library">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        <span>Javon</span>
+    </button>
+
+    <button class="nav-item" data-panel="stats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="20" x2="12" y2="10"/>
+            <line x1="18" y1="20" x2="18" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="16"/>
+        </svg>
+        <span>Statistika</span>
+    </button>
+
+    <button class="nav-item" data-panel="books">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            <line x1="9" y1="7" x2="16" y2="7"/>
+            <line x1="9" y1="11" x2="16" y2="11"/>
+        </svg>
+        <span>Kitoblar</span>
+    </button>
+
+    <!-- O'RTA: + -->
+    <button class="nav-item add-book-nav" id="mobileAddBookBtn">
+        <div class="add-btn-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+        </div>
+        <span class="add-label">Qo'shish</span>
+    </button>
+
+    <!-- O'NG: 3 ta -->
+    <button class="nav-item" data-panel="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span>Odamlar</span>
+    </button>
+
+    <button class="nav-item" data-panel="chats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span>Chatlar</span>
+    </button>
+
+    <button class="nav-item" data-panel="profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>Profil</span>
+    </button>
+</nav>
+<!-- ================================================
+     BOOK MODAL (Wizard + View + Edit uchun)
+     ================================================ -->
+<div id="bookModal" class="modal-custom">
+    <div class="modal-content">
+        <button class="modal-close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <div class="modal-body"></div>
+    </div>
+</div>
+
+<!-- ================================================
+     PDF READER MODAL
+     ================================================ -->
+<div id="pdfReaderModal" class="reader-modal-custom">
+    <div class="reader-topbar">
+        <button type="button" class="reader-close-btn" id="pdfReaderCloseBtn" title="Yopish">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <div class="reader-title-wrap">
+            <h3 id="pdfReaderTitle">PDF</h3>
+            <span class="reader-subtitle" id="pdfReaderSubtitle">Yuklanmoqda...</span>
+        </div>
+        <div class="reader-controls">
+            <button type="button" class="reader-ctrl-btn" id="pdfPrevBtn" title="Oldingi sahifa">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+            </button>
+            <div class="reader-page-info">
+                <input type="number" id="pdfPageInput" min="1" value="1" />
+                <span>/</span>
+                <span id="pdfPageTotal">-</span>
+            </div>
+            <button type="button" class="reader-ctrl-btn" id="pdfNextBtn" title="Keyingi sahifa">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </button>
+            <div class="reader-divider"></div>
+            <button type="button" class="reader-ctrl-btn" id="pdfZoomOutBtn" title="Kichraytirish">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    <line x1="8" y1="11" x2="14" y2="11"/>
+                </svg>
+            </button>
+            <span class="reader-zoom-info" id="pdfZoomInfo">100%</span>
+            <button type="button" class="reader-ctrl-btn" id="pdfZoomInBtn" title="Kattalashtirish">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    <line x1="11" y1="8" x2="11" y2="14"/>
+                    <line x1="8" y1="11" x2="14" y2="11"/>
+                </svg>
+            </button>
+            <div class="reader-divider"></div>
+            <button type="button" class="reader-ctrl-btn" id="pdfDownloadBtn" title="Yuklab olish">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="reader-body">
+        <div id="pdfReaderLoading" class="reader-loading">
+            <div class="share-spinner"></div>
+            <p>PDF yuklanmoqda...</p>
+        </div>
+        <canvas id="pdfCanvas"></canvas>
+    </div>
+</div>
+
+<!-- ================================================
+     AUDIO PLAYER MODAL
+     ================================================ -->
+<div id="audioPlayerModal" class="audio-modal-custom">
+    <div class="audio-player-content">
+        <button type="button" class="audio-close-btn" id="audioPlayerCloseBtn" title="Yopish">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+
+        <div class="audio-cover-wrap">
+            <div class="audio-cover" id="audioCover"></div>
+            <div class="audio-cover-glow"></div>
+        </div>
+
+        <div class="audio-info">
+            <h3 class="audio-title" id="audioTitle">Audio kitob</h3>
+            <p class="audio-author" id="audioAuthor">—</p>
+        </div>
+
+        <div class="audio-progress-wrap">
+            <span class="audio-time" id="audioCurrentTime">0:00</span>
+            <div class="audio-progress" id="audioProgress">
+                <div class="audio-progress-buffer" id="audioProgressBuffer"></div>
+                <div class="audio-progress-bar" id="audioProgressBar">
+                    <div class="audio-progress-thumb"></div>
+                </div>
+            </div>
+            <span class="audio-time" id="audioDuration">0:00</span>
+        </div>
+
+        <div class="audio-controls">
+            <button type="button" class="audio-ctrl-btn small" id="audioRewindBtn" title="15s orqaga">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="11 19 2 12 11 5 11 19"/>
+                    <path d="M22 19V5l-11 7 11 7z" opacity="0.35"/>
+                </svg>
+            </button>
+            <button type="button" class="audio-ctrl-btn play" id="audioPlayBtn" title="Ijro etish">
+                <svg id="audioPlayIcon" width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="6 4 20 12 6 20"/>
+                </svg>
+                <svg id="audioPauseIcon" width="30" height="30" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+                    <rect x="6" y="4" width="4" height="16"/>
+                    <rect x="14" y="4" width="4" height="16"/>
+                </svg>
+            </button>
+            <button type="button" class="audio-ctrl-btn small" id="audioForwardBtn" title="15s oldinga">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="13 19 22 12 13 5 13 19"/>
+                    <path d="M2 19V5l11 7-11 7z" opacity="0.35"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="audio-extras">
+            <div class="audio-volume-wrap">
+                <button type="button" class="audio-extra-btn" id="audioMuteBtn" title="Ovoz">
+                    <svg id="audioVolumeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    </svg>
+                </button>
+                <input type="range" id="audioVolume" class="audio-volume-slider" min="0" max="1" step="0.01" value="1" />
+            </div>
+
+            <div class="audio-speed-wrap">
+                <button type="button" class="audio-speed-btn" id="audioSpeedBtn" title="Tezlik">1×</button>
+            </div>
+        </div>
+
+        <audio id="audioElement" preload="metadata"></audio>
+    </div>
+</div>
+
+<!-- ================================================
+     SHARE MODAL
+     ================================================ -->
+<div id="shareModal" class="share-modal-custom">
+    <div class="share-modal-content">
+        <div class="share-modal-header">
+            <h3 id="shareModalTitle">Ulashish</h3>
+            <button type="button" class="share-modal-close" id="shareModalCloseBtn" aria-label="Yopish">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="share-modal-body">
+            <div id="sharePreviewWrap" class="share-preview-wrap">
+                <div id="sharePreviewLoading" class="share-preview-loading">
+                    <div class="share-spinner"></div>
+                    <p>Rasm tayyorlanmoqda...</p>
+                </div>
+                <img id="sharePreviewImg" class="share-preview-img" alt="Ulashish ko'rinishi" style="display:none;" />
+            </div>
+
+            <div class="share-options">
+                <button type="button" class="share-option-btn" id="shareNativeBtn" title="Boshqa ilovalar">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"/>
+                        <circle cx="6" cy="12" r="3"/>
+                        <circle cx="18" cy="19" r="3"/>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                    </svg>
+                    <span>Ulashish</span>
+                </button>
+
+                <button type="button" class="share-option-btn telegram" id="shareTelegramBtn" title="Telegram">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+                    </svg>
+                    <span>Telegram</span>
+                </button>
+
+                <button type="button" class="share-option-btn instagram" id="shareInstagramBtn" title="Instagram">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                    </svg>
+                    <span>Instagram</span>
+                </button>
+
+                <button type="button" class="share-option-btn whatsapp" id="shareWhatsappBtn" title="WhatsApp">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    <span>WhatsApp</span>
+                </button>
+
+                <button type="button" class="share-option-btn" id="shareDownloadBtn" title="Yuklab olish">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <span>Yuklash</span>
+                </button>
+
+                <button type="button" class="share-option-btn" id="shareCopyLinkBtn" title="Havolani nusxalash">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                    <span>Havola</span>
+                </button>
+            </div>
+
+            <div class="share-link-row">
+                <input type="text" id="shareLinkInput" class="share-link-input" readonly placeholder="Havola" />
+                <button type="button" id="shareLinkCopyInline" class="share-link-copy-btn" title="Nusxalash">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================
+     SHARE TARGET MODAL
+     ================================================ -->
+<div id="shareTargetModal" class="custom-modal">
+    <div class="custom-modal-content">
+        <div class="custom-modal-icon" id="shareTargetIcon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+        </div>
+        <h3 class="custom-modal-title" id="shareTargetTitle">Nimani ulashish?</h3>
+        <p class="custom-modal-message" id="shareTargetMessage">Kerakli variantni tanlang</p>
+        <div class="share-target-options" id="shareTargetOptions">
+            <button class="share-target-btn" data-target="shelf1">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+                <span>1-javon</span>
+            </button>
+            <button class="share-target-btn" data-target="shelf2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+                <span>2-javon</span>
+            </button>
+            <button class="share-target-btn" data-target="shelf3">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+                <span>3-javon</span>
+            </button>
+            <button class="share-target-btn primary" data-target="all">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+                <span>Butun kutubxona</span>
+            </button>
+            <button class="share-target-btn primary" data-target="stats">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="20" x2="12" y2="10"/>
+                    <line x1="18" y1="20" x2="18" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="16"/>
+                </svg>
+                <span>Statistika</span>
+            </button>
+        </div>
+        <div class="custom-modal-actions" style="margin-top:18px;">
+            <button class="custom-modal-btn secondary" id="shareTargetCancel">Bekor qilish</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================
+     CUSTOM ALERT MODAL
+     ================================================ -->
+<div id="customAlert" class="custom-modal">
+    <div class="custom-modal-content">
+        <div class="custom-modal-icon" id="customAlertIcon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+        </div>
+        <h3 class="custom-modal-title" id="customAlertTitle">Xabar</h3>
+        <p class="custom-modal-message" id="customAlertMessage"></p>
+        <div class="custom-modal-actions">
+            <button class="custom-modal-btn primary" id="customAlertOk">OK</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================
+     CUSTOM CONFIRM MODAL
+     ================================================ -->
+<div id="customConfirm" class="custom-modal">
+    <div class="custom-modal-content">
+        <div class="custom-modal-icon confirm" id="customConfirmIcon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+        </div>
+        <h3 class="custom-modal-title" id="customConfirmTitle">Tasdiqlash</h3>
+        <p class="custom-modal-message" id="customConfirmMessage"></p>
+        <div class="custom-modal-actions">
+            <button class="custom-modal-btn secondary" id="customConfirmCancel">Bekor qilish</button>
+            <button class="custom-modal-btn danger" id="customConfirmOk">Ha, davom etish</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================
+     RASM QIRQISH MODAL
+     ================================================ -->
+<div id="cropModal" class="crop-modal-custom">
+    <div class="crop-modal-content">
+        <div class="crop-modal-header">
+            <h3 id="cropTitle">Rasmni qirqish</h3>
+            <button type="button" class="crop-modal-close" id="cropCloseBtn" aria-label="Yopish">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <div class="crop-modal-body">
+            <img id="cropImage" src="" alt="crop">
+        </div>
+        <div class="crop-modal-aspects" id="cropAspectTabs">
+            <button type="button" class="crop-aspect-btn active" data-aspect="free">Erkin</button>
+            <button type="button" class="crop-aspect-btn" data-aspect="1">1:1</button>
+            <button type="button" class="crop-aspect-btn" data-aspect="0.3333">1:3</button>
+            <button type="button" class="crop-aspect-btn" data-aspect="0.6667">2:3</button>
+            <button type="button" class="crop-aspect-btn" data-aspect="1.7778">16:9</button>
+        </div>
+        <div class="crop-modal-footer">
+            <button type="button" class="crop-btn secondary" id="cropCancelBtn">Bekor qilish</button>
+            <button type="button" class="crop-btn primary" id="cropSaveBtn">Qirqib saqlash</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================
+     PWA SERVICE WORKER
+     ================================================ -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then((reg) => console.log('Service Worker registered:', reg.scope))
+                .catch((err) => console.warn('SW error:', err));
+        });
+    }
+</script>
+
+<!-- ================================================
+     MAIN SCRIPT
+     ================================================ -->
+<script src="script.js"></script>
+
+</body>
+</html>
+
